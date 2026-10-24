@@ -1,0 +1,118 @@
+dataset:
+  name: isic18_seg
+  dataset_name: ISIC2018
+  data_root: ./data/ISIC2018
+  train_split: train
+  val_split: valid
+  test_split: test
+  prepare:
+    enabled: false
+
+model:
+  name: emcad_seg
+  num_classes: 1
+  encoder: pvt_v2_b2
+  pretrain: true
+  pretrained_dir: ./pretrained_pth/pvt
+  expansion_factor: 2
+  kernel_sizes: [1, 3, 5]
+  lgag_ks: 3
+  activation: relu6
+  dw_parallel: true
+  add: true
+  arch:
+    decoder:
+      name: adjacent_skip_ancestry_replay_emcad
+    heads:
+      name: boundary_valid_two_tail_trimmed_barycenter_4scale
+    flow:
+      name: ordered_scale_lie_signature
+      channels: [64, 128, 320, 512]
+      latent_dim: 8
+
+runtime:
+  imports:
+    - ../emcad/modules/radial_rank_loss.py
+    - ../emcad/modules/ancestry_decoder.py
+    - ../emcad/modules/gibbs_compatibility_head.py
+    - ../emcad/modules/trimmed_barycenter.py
+    - ../emcad/modules/boundary_head.py
+    - ../emcad/modules/boundary_normal_loss.py
+    - ../emcad/modules/ordered_scale_signature.py
+
+experiment:
+  name: GeoTraceNet
+
+train:
+  epochs: 100
+  batch_size: 32
+  img_size: 352
+  lr: 0.0001
+  clip: 0.5
+  color_image: true
+  augmentation: true
+  num_workers: 6
+  seed: 0
+  seed_list: [0]
+  deterministic: true
+  augmentation_seed_mode: deterministic_v3
+  augmentation_library_version: "2.0.8"
+  runs: 1
+  run_start: 1
+  log_interval: 50
+  amp: true
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  drop_last: false
+  eval_test_during_train: false
+  save_root: ./outputs/checkpoints
+  log_root: ./outputs/logs
+  loss_name: structure_loss_radialrankboundary_boundary_normal_alignment
+  loss_kwargs:
+    base_weight: 1.0
+    rank_weight: 0.18
+    halo_weight: 0.08
+    core_radius: 2
+    boundary_radius: 1
+    inner_halo_radius: 4
+    outer_halo_radius: 8
+    margin: 0.08
+    normal_weight: 0.08
+    normal_eps: 0.0001
+  optimizer:
+    name: adamw
+    weight_decay: 0.0001
+  scheduler:
+    name: cosine
+    eta_min: 0.000001
+  early_stopping:
+    enabled: true
+    scope: all
+    monitor: val_dice
+    mode: max
+    min_epochs: 60
+    patience: 20
+    min_delta: 0.0
+  multi_scale_rates: [0.75, 1.0, 1.25]
+  max_train_steps: 0
+
+eval:
+  batch_size: 32
+  img_size: 352
+  color_image: true
+  num_workers: 4
+  amp: true
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  pred_root: ./outputs/predictions
+  result_root: ./outputs/results
+  model_root: ./outputs/checkpoints
+  max_eval_batches: 0
+  compute_hd95: false
+  save_predictions: false
+
+report:
+  root_results_csv: ./outputs/results.csv
+  root_summary_csv: ./outputs/summary.csv

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software or the released checkpoints, please cite this release and the accompanying manuscript."
+type: software
+title: "GeoTraceNet: A Geometry-Guided Scale-Evolution Network for Robust Skin-Lesion Segmentation"
+version: "0.1.0"
+date-released: 2026-10-26
+authors:
+  - family-names: Zhang
+    given-names: Lingyun
+  - family-names: Wei
+    given-names: Xin
+  - family-names: Zhang
+    given-names: Jian
+  - family-names: Cao
+    given-names: Junyang
+  - family-names: Huang
+    given-names: Jinbo
+repository-code: "https://github.com/zzzlyly/GeoTraceNet"
+license: MIT
+keywords:
+  - skin-lesion segmentation
+  - dermoscopic image analysis
+  - medical image segmentation
+  - deep learning

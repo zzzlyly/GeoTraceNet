@@ -6,6 +6,9 @@ contains the runnable implementation, the paper configuration, and the checksum
 manifest for the best checkpoints from the three reported seeds `{0, 1, 2}`.
 The large trained checkpoints are distributed as a separate archive.
 
+The current reproducibility release is `v0.1.0`. The release tag identifies the
+exact code and configuration version associated with the reported experiments.
+
 ![GeoTraceNet overall architecture](assets/model_architecture.png)
 
 *Overall architecture. The four-scale PVTv2-B2 features are organized by the
@@ -197,12 +200,15 @@ If you use this code or the released checkpoints, cite the accompanying
 GeoTraceNet manuscript:
 
 ```bibtex
-@article{zhang2026geotracenet,
+@misc{zhang2026geotracenet,
   title   = {GeoTraceNet: A Geometry-Guided Scale-Evolution Network for Robust Skin-Lesion Segmentation},
   author  = {Zhang, Lingyun and Wei, Xin and Zhang, Jian and Cao, Junyang and Huang, Jinbo},
-  note    = {Preprint},
+  year    = {2026},
+  version = {v0.1.0},
+  url     = {https://github.com/zzzlyly/GeoTraceNet},
+  note    = {Reproducibility release; manuscript prepared for submission to Knowledge-Based Systems},
 }
 ```
 
-The arXiv identifier and persistent code link can be added to this entry after
-the preprint is posted.
+The formal journal citation and DOI will be added after publication. The
+machine-readable citation metadata is also provided in `CITATION.cff`.
